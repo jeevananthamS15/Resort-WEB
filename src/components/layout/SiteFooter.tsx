@@ -3,7 +3,7 @@ import type { TenantInfo } from "@/types/backend";
 export function SiteFooter({ info }: { info: TenantInfo }) {
   return (
     <footer className="border-t border-border/60 bg-secondary/40">
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 py-8 sm:py-12 grid-cols-1 sm:grid-cols-3">
         <div>
           <p className="font-heading text-lg text-foreground">{info.tenant.name}</p>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -13,7 +13,7 @@ export function SiteFooter({ info }: { info: TenantInfo }) {
 
         <div>
           <p className="text-sm font-medium text-foreground">Contact</p>
-          <div className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
+          <div className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground break-words">
             {info.general.contactEmail && <span>{info.general.contactEmail}</span>}
             {info.general.contactPhone && <span>{info.general.contactPhone}</span>}
             {info.general.address && <span>{info.general.address}</span>}
@@ -30,7 +30,7 @@ export function SiteFooter({ info }: { info: TenantInfo }) {
           </div>
         )}
       </div>
-      <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
+      <div className="border-t border-border/60 py-4 px-4 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} {info.tenant.name}. All rights reserved.
       </div>
     </footer>

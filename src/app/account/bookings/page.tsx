@@ -38,16 +38,16 @@ export default async function MyBookingsPage() {
           {sorted.map((b) => (
             <Link key={b.id} href={`/account/bookings/${b.id}`}>
               <Card className="transition-shadow hover:shadow-md">
-                <CardContent className="flex items-center justify-between p-5">
-                  <div>
-                    <p className="font-medium text-foreground">{b.bookingNumber}</p>
-                    <p className="text-sm text-muted-foreground">
+                <CardContent className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5">
+                  <div className="min-w-0">
+                    <p className="font-medium text-foreground truncate">{b.bookingNumber}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground capitalize">
                       {b.source.replace(/_/g, " ")} · ₹{b.totalAmount}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline">{b.paymentStatus}</Badge>
-                    <Badge variant={STATUS_VARIANT[b.status]}>{b.status}</Badge>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="text-xs">{b.paymentStatus}</Badge>
+                    <Badge variant={STATUS_VARIANT[b.status]} className="text-xs">{b.status}</Badge>
                   </div>
                 </CardContent>
               </Card>

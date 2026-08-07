@@ -42,21 +42,21 @@ export function BookingWidget({ room }: { room: PublicRoomDetail }) {
   }
 
   return (
-    <Card className="sticky top-24 border-border/60 shadow-md">
-      <CardContent className="flex flex-col gap-4 p-6">
+    <Card className="sticky top-20 sm:top-24 border-border/60 shadow-md w-full">
+      <CardContent className="flex flex-col gap-4 p-4 sm:p-6">
         <div className="flex items-baseline gap-1">
-          <span className="font-heading text-2xl text-foreground">₹{perNight}</span>
-          <span className="text-sm text-muted-foreground">/ night</span>
+          <span className="font-heading text-xl sm:text-2xl text-foreground">₹{perNight}</span>
+          <span className="text-xs sm:text-sm text-muted-foreground">/ night</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1.5 min-w-0">
             <Label className="text-xs text-muted-foreground">Check-in</Label>
-            <Input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+            <Input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} className="text-sm" />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 min-w-0">
             <Label className="text-xs text-muted-foreground">Check-out</Label>
-            <Input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+            <Input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} className="text-sm" />
           </div>
         </div>
 

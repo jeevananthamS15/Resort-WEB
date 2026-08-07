@@ -42,7 +42,7 @@ export default async function CheckoutPage({
   );
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-12">
+    <div className="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12">
       <Link
         href={`/rooms/${roomId}`}
         className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
@@ -51,13 +51,13 @@ export default async function CheckoutPage({
         Back to room
       </Link>
 
-      <h1 className="mb-6 font-heading text-3xl text-foreground">Confirm your booking</h1>
+      <h1 className="mb-6 font-heading text-2xl sm:text-3xl text-foreground">Confirm your booking</h1>
 
       <Card className="mb-6">
-        <CardHeader>
+        <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
           <CardTitle className="text-base">{room.name}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-2 text-sm">
+        <CardContent className="flex flex-col gap-2 p-4 sm:p-6 pt-0 text-sm">
           <Row label="Check-in" value={checkInDate} />
           <Row label="Check-out" value={checkOutDate} />
           <Row label="Guests" value={String(guests)} />

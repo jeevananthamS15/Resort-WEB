@@ -23,7 +23,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative flex min-h-[85vh] items-end overflow-hidden">
+      <section className="relative flex min-h-[75vh] sm:min-h-[85vh] items-end overflow-hidden">
         <Image
           src={HERO_IMAGE}
           alt={info.tenant.name}
@@ -31,18 +31,18 @@ export default async function HomePage() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
 
-        <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 pb-16">
+        <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-6 sm:gap-8 px-4 sm:px-6 pt-24 pb-12 sm:pb-16">
           <div className="max-w-2xl text-white">
-            <p className="mb-3 flex items-center gap-1.5 text-sm font-medium tracking-wide text-white/80">
-              <MapPin className="size-4" />
-              {info.general.address ?? "A place worth the journey"}
+            <p className="mb-2 sm:mb-3 flex items-center gap-1.5 text-xs sm:text-sm font-medium tracking-wide text-white/80">
+              <MapPin className="size-4 shrink-0" />
+              <span className="truncate">{info.general.address ?? "A place worth the journey"}</span>
             </p>
-            <h1 className="font-heading text-4xl leading-tight sm:text-5xl lg:text-6xl">
+            <h1 className="font-heading text-3xl leading-tight sm:text-5xl lg:text-6xl">
               Where every stay feels like coming home to the hills.
             </h1>
-            <p className="mt-4 text-lg text-white/85">
+            <p className="mt-3 sm:mt-4 text-base sm:text-lg text-white/85">
               Book your room at {info.tenant.name} directly — best rates, no
               middleman.
             </p>
@@ -54,7 +54,7 @@ export default async function HomePage() {
 
       {/* Trust strip */}
       <section className="border-b border-border/60 bg-card">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-6 py-8 sm:grid-cols-3">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 sm:px-6 py-8 sm:grid-cols-3">
           <Feature
             icon={ShieldCheck}
             title="Book directly, pay securely"
@@ -75,15 +75,15 @@ export default async function HomePage() {
 
       {/* Featured rooms */}
       {featured.length > 0 && (
-        <section className="mx-auto max-w-6xl px-6 py-16">
-          <div className="mb-8 flex items-end justify-between">
+        <section className="mx-auto max-w-6xl px-4 sm:px-6 py-10 sm:py-16">
+          <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <h2 className="font-heading text-3xl text-foreground">Featured rooms</h2>
-              <p className="mt-1 text-muted-foreground">
+              <h2 className="font-heading text-2xl sm:text-3xl text-foreground">Featured rooms</h2>
+              <p className="mt-1 text-sm sm:text-base text-muted-foreground">
                 A few of our guests&apos; favourites.
               </p>
             </div>
-            <Button variant="ghost" render={<Link href="/rooms" />}>
+            <Button variant="ghost" className="w-fit" render={<Link href="/rooms" />}>
               View all rooms
               <ArrowRight className="size-4" />
             </Button>
@@ -97,16 +97,16 @@ export default async function HomePage() {
       )}
 
       {/* CTA */}
-      <section className="bg-primary py-16 text-primary-foreground">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-6 text-center">
-          <h2 className="font-heading text-3xl">Ready for a getaway?</h2>
-          <p className="max-w-xl text-primary-foreground/85">
+      <section className="bg-primary py-12 sm:py-16 text-primary-foreground">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 sm:px-6 text-center">
+          <h2 className="font-heading text-2xl sm:text-3xl">Ready for a getaway?</h2>
+          <p className="max-w-xl text-sm sm:text-base text-primary-foreground/85">
             Check availability for your dates and secure your room in minutes.
           </p>
           <Button
             size="lg"
             variant="secondary"
-            className="mt-2"
+            className="mt-2 w-full sm:w-auto"
             render={<Link href="/rooms" />}
           >
             Browse rooms

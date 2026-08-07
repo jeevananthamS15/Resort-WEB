@@ -29,25 +29,26 @@ export function AvailabilitySearchBar() {
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card/95 p-4 shadow-lg backdrop-blur sm:flex-row sm:items-end sm:gap-4 sm:p-5">
-      <div className="flex flex-1 flex-col gap-1.5">
+    <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card/95 p-4 shadow-lg backdrop-blur md:flex-row md:items-end md:gap-4 sm:p-5 w-full">
+      <div className="flex flex-1 flex-col gap-1.5 min-w-0">
         <Label className="text-xs text-muted-foreground">Check-in</Label>
-        <Input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+        <Input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} className="w-full text-sm" />
       </div>
-      <div className="flex flex-1 flex-col gap-1.5">
+      <div className="flex flex-1 flex-col gap-1.5 min-w-0">
         <Label className="text-xs text-muted-foreground">Check-out</Label>
-        <Input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+        <Input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} className="w-full text-sm" />
       </div>
-      <div className="flex flex-col gap-1.5 sm:w-28">
+      <div className="flex flex-col gap-1.5 md:w-28 min-w-0">
         <Label className="text-xs text-muted-foreground">Guests</Label>
         <Input
           type="number"
           min={1}
           value={guests}
           onChange={(e) => setGuests(Number(e.target.value))}
+          className="w-full text-sm"
         />
       </div>
-      <Button size="lg" className="w-full sm:w-auto" onClick={search}>
+      <Button size="lg" className="w-full md:w-auto shrink-0 mt-1 md:mt-0" onClick={search}>
         <Search className="size-4" />
         Search
       </Button>

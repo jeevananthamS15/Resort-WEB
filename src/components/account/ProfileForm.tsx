@@ -39,7 +39,7 @@ export function ProfileForm({ customer }: { customer: PublicCustomer }) {
         </p>
       )}
 
-      <Button type="submit" disabled={pending} className="w-fit">
+      <Button type="submit" disabled={pending} className="w-full sm:w-fit">
         {pending ? "Saving…" : "Save changes"}
       </Button>
     </form>

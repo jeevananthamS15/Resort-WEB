@@ -20,26 +20,26 @@ export default async function RoomsPage({
   const enabled = "rooms" in result;
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12">
-      <div className="mb-8">
-        <h1 className="font-heading text-3xl text-foreground">Our rooms</h1>
-        <p className="mt-1 text-muted-foreground">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="font-heading text-2xl sm:text-3xl text-foreground">Our rooms</h1>
+        <p className="mt-1 text-sm sm:text-base text-muted-foreground">
           {searching
             ? `Available ${checkInDate} → ${checkOutDate} for ${guestCount ?? 1} guest(s).`
             : "Browse everything we have to offer."}
         </p>
       </div>
 
-      <div className="mb-10 max-w-3xl">
+      <div className="mb-8 sm:mb-10 max-w-3xl">
         <AvailabilitySearchBar />
       </div>
 
       {!enabled ? (
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-sm sm:text-base">
           Online booking isn&apos;t available for this resort right now.
         </p>
       ) : rooms.length === 0 ? (
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-sm sm:text-base">
           {searching
             ? "No rooms are available for these dates — try a different range."
             : "No rooms are listed yet."}

@@ -42,21 +42,21 @@ export default async function BookingDetailPage({
           <ArrowLeft className="size-4" />
           My bookings
         </Link>
-        <div className="mt-2 flex items-center justify-between">
-          <h1 className="font-heading text-2xl text-foreground">{booking.bookingNumber}</h1>
-          <Badge variant={STATUS_VARIANT[booking.status]}>{booking.status}</Badge>
+        <div className="mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h1 className="font-heading text-xl sm:text-2xl text-foreground truncate">{booking.bookingNumber}</h1>
+          <Badge variant={STATUS_VARIANT[booking.status]} className="w-fit">{booking.status}</Badge>
         </div>
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="p-4 sm:p-6 pb-2 sm:pb-4">
           <CardTitle className="text-base">Rooms</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+        <CardContent className="flex flex-col gap-3 p-4 sm:p-6 pt-0">
           {booking.rooms.map((r, i) => (
             <div
               key={r.id}
-              className="flex items-center justify-between border-b border-border pb-3 last:border-0 last:pb-0"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 border-b border-border pb-3 last:border-0 last:pb-0"
             >
               <div>
                 <p className="text-sm font-medium text-foreground">
@@ -66,13 +66,13 @@ export default async function BookingDetailPage({
                   {r.checkInDate} → {r.checkOutDate} · {r.guestCount} guests
                 </p>
               </div>
-              <p className="text-sm text-muted-foreground">₹{r.rateSnapshot}</p>
+              <p className="text-sm font-medium sm:font-normal text-muted-foreground">₹{r.rateSnapshot}</p>
             </div>
           ))}
-          <div className="flex justify-between border-t border-border pt-3 font-medium text-foreground">
+          <div className="flex flex-wrap items-center justify-between border-t border-border pt-3 gap-1 font-medium text-foreground text-sm sm:text-base">
             <span>Total</span>
-            <span>
-              ₹{booking.totalAmount} · {booking.paymentStatus}
+            <span className="text-right">
+              ₹{booking.totalAmount} · <span className="text-xs sm:text-sm font-normal text-muted-foreground">{booking.paymentStatus}</span>
             </span>
           </div>
         </CardContent>

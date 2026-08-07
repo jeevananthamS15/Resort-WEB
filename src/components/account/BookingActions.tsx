@@ -102,9 +102,9 @@ export function BookingActions({
   return (
     <div className="flex flex-col gap-3">
       {canPay && (
-        <div className="flex items-end gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-end gap-2">
           <Select value={method} onValueChange={(v) => v && setMethod(v as CustomerPaymentMethod)}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -115,14 +115,14 @@ export function BookingActions({
               ))}
             </SelectContent>
           </Select>
-          <Button disabled={isPending} onClick={handlePay}>
+          <Button disabled={isPending} onClick={handlePay} className="w-full sm:w-auto">
             Pay ₹{booking.totalAmount}
           </Button>
         </div>
       )}
 
       {canInvoice && (
-        <Button variant="outline" disabled={isPending} onClick={handleInvoice} className="w-fit">
+        <Button variant="outline" disabled={isPending} onClick={handleInvoice} className="w-full sm:w-fit">
           View invoice
         </Button>
       )}
@@ -132,7 +132,7 @@ export function BookingActions({
           variant="destructive"
           disabled={isPending}
           onClick={() => setConfirmCancel(true)}
-          className="w-fit"
+          className="w-full sm:w-fit"
         >
           Cancel booking
         </Button>
