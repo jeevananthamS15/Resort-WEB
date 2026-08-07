@@ -1,6 +1,46 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
+import { MapPin, Clock, ArrowRight } from "lucide-react";
 import type { TenantInfo } from "@/types/backend";
+
+function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (email) setSubmitted(true);
+  }
+
+  if (submitted) {
+    return (
+      <p className="text-xs text-emerald-600 font-medium py-2">
+        ✓ Thank you! You&apos;ll hear from us soon.
+      </p>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      <input
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email"
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+      />
+      <button
+        type="submit"
+        className="flex items-center justify-center gap-1 rounded-lg bg-primary py-2 px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+      >
+        Subscribe <ArrowRight className="size-3" />
+      </button>
+    </form>
+  );
+}
 
 export function SiteFooter({ info }: { info: TenantInfo }) {
   return (
@@ -68,19 +108,7 @@ export function SiteFooter({ info }: { info: TenantInfo }) {
             <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
               Subscribe to receive exclusive offers and seasonal stories.
             </p>
-            <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-              <button
-                type="submit"
-                className="flex items-center justify-center gap-1 rounded-lg bg-primary py-2 px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-              >
-                Subscribe <ArrowRight className="size-3" />
-              </button>
-            </form>
+            <NewsletterForm />
           </div>
 
         </div>

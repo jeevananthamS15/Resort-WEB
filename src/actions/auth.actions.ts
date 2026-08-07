@@ -33,6 +33,10 @@ export async function loginAction(
     await setSessionCookies(result.accessToken, result.refreshToken);
   } catch (err) {
     if (err instanceof BackendError) return { error: err.message };
+    if (err instanceof Error && err.name === "AbortError") {
+      return { error: "Backend server timed out while waking up. Please try again in a few seconds." };
+    }
+    if (err instanceof Error && err.message) return { error: err.message };
     return { error: "Something went wrong. Please try again." };
   }
 
@@ -68,6 +72,10 @@ export async function registerAction(
     await setSessionCookies(result.accessToken, result.refreshToken);
   } catch (err) {
     if (err instanceof BackendError) return { error: err.message };
+    if (err instanceof Error && err.name === "AbortError") {
+      return { error: "Backend server timed out while waking up. Please try again in a few seconds." };
+    }
+    if (err instanceof Error && err.message) return { error: err.message };
     return { error: "Something went wrong. Please try again." };
   }
 

@@ -35,15 +35,23 @@ function tenantHeaders(extra: Record<string, string> = {}): Record<string, strin
 /** Public, unauthenticated calls — browsing, tenant info, register/login. */
 export async function publicFetch<T>(
   path: string,
-  options: { method?: string; body?: unknown } = {},
+  options: { method?: string; body?: unknown; timeoutMs?: number } = {},
 ): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    method: options.method ?? "GET",
-    headers: tenantHeaders(options.body ? { "Content-Type": "application/json" } : {}),
-    body: options.body ? JSON.stringify(options.body) : undefined,
-    cache: "no-store",
-  });
-  return parseEnvelope<T>(res);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), options.timeoutMs ?? 8000);
+
+  try {
+    const res = await fetch(`${BASE_URL}${path}`, {
+      method: options.method ?? "GET",
+      headers: tenantHeaders(options.body ? { "Content-Type": "application/json" } : {}),
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    return await parseEnvelope<T>(res);
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 /** Authenticated calls. Refresh-token rotation happens in middleware.ts on
@@ -53,28 +61,36 @@ export async function publicFetch<T>(
  * cookie-write recovery available from inside a Server Component. */
 export async function backendFetch<T>(
   path: string,
-  options: { method?: string; body?: unknown } = {},
+  options: { method?: string; body?: unknown; timeoutMs?: number } = {},
 ): Promise<T> {
   const accessToken = await getAccessToken();
   if (!accessToken) {
     redirect("/login?reason=expired");
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    method: options.method ?? "GET",
-    headers: tenantHeaders({
-      Authorization: `Bearer ${accessToken}`,
-      ...(options.body ? { "Content-Type": "application/json" } : {}),
-    }),
-    body: options.body ? JSON.stringify(options.body) : undefined,
-    cache: "no-store",
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), options.timeoutMs ?? 8000);
 
-  if (res.status === 401) {
-    redirect("/login?reason=expired");
+  try {
+    const res = await fetch(`${BASE_URL}${path}`, {
+      method: options.method ?? "GET",
+      headers: tenantHeaders({
+        Authorization: `Bearer ${accessToken}`,
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+      }),
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      cache: "no-store",
+      signal: controller.signal,
+    });
+
+    if (res.status === 401) {
+      redirect("/login?reason=expired");
+    }
+
+    return await parseEnvelope<T>(res);
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  return parseEnvelope<T>(res);
 }
 
 export async function logoutFromBackend(): Promise<void> {
