@@ -15,10 +15,15 @@ const HERO_IMAGES = [
 
 export default async function HomePage() {
   const [{ rooms }, info] = await Promise.all([
-    publicFetch<{ rooms: PublicRoom[] } | { enabled: false }>("/public/rooms").then(
-      (r) => ("rooms" in r ? r : { rooms: [] as PublicRoom[] }),
-    ),
-    publicFetch<TenantInfo>("/public/tenant-info"),
+    publicFetch<{ rooms: PublicRoom[] } | { enabled: false }>("/public/rooms")
+      .then((r) => ("rooms" in r ? r : { rooms: [] as PublicRoom[] }))
+      .catch(() => ({ rooms: [] as PublicRoom[] })),
+    publicFetch<TenantInfo>("/public/tenant-info").catch(() => ({
+      tenant: { name: "Grand Hill Resort & Spa", currency: "INR", timezone: "Asia/Kolkata" },
+      general: { checkInTime: "14:00", checkOutTime: "11:00", address: "Mountain Ridge Estate" },
+      branding: {},
+      policies: { cancellationWindowHours: 48, cancellationPolicy: "Flexible 48h cancellation" },
+    })),
   ]);
 
   const featured = rooms.slice(0, 3);

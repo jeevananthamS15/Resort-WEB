@@ -13,7 +13,7 @@ const TENANT_DOMAIN = process.env.TENANT_DOMAIN ?? "localhost";
  * (self-refresh inside the Server-Component-called fetch helper) crashed
  * with "Cookies can only be modified in a Server Action or Route
  * Handler." Applied correctly from the start here. */
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const access = req.cookies.get(ACCESS_COOKIE_NAME)?.value;
   const refresh = req.cookies.get(REFRESH_COOKIE_NAME)?.value;
 
