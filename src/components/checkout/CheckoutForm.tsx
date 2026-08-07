@@ -74,12 +74,12 @@ export function CheckoutForm({
         // only flips once the webhook lands server-side — hence "submitted"
         // rather than "confirmed" here.
         toast.success("Payment submitted — confirming your booking…");
-        router.push(`/account/bookings/${bookingId}`);
+        router.push(`/checkout/success?bookingId=${bookingId}`);
         return;
       }
 
       toast.success("Booking confirmed!");
-      router.push(`/account/bookings/${bookingId}`);
+      router.push(`/checkout/success?bookingId=${bookingId}`);
     });
   }
 
