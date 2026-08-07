@@ -7,11 +7,16 @@ import type {
   CustomerPaymentMethod,
   Invoice,
   Payment,
+  RazorpayCheckoutConfig,
 } from "@/types/backend";
 
 export type CreateAndPayState = {
   error?: string;
-  success?: { bookingId: string; redirectUrl?: string };
+  success?: {
+    bookingId: string;
+    redirectUrl?: string;
+    checkout?: RazorpayCheckoutConfig;
+  };
 };
 
 /** Full payment only, collected immediately after booking creation — no
@@ -51,11 +56,21 @@ export async function createAndPayAction(input: {
   }
 
   try {
-    const paymentResult = await backendFetch<{ payment: Payment; redirectUrl?: string }>(
-      `/customer/bookings/${bookingId}/payments`,
-      { method: "POST", body: { method: input.paymentMethod, amount: totalAmount } },
-    );
-    return { success: { bookingId, redirectUrl: paymentResult.redirectUrl } };
+    const paymentResult = await backendFetch<{
+      payment: Payment;
+      redirectUrl?: string;
+      checkout?: RazorpayCheckoutConfig;
+    }>(`/customer/bookings/${bookingId}/payments`, {
+      method: "POST",
+      body: { method: input.paymentMethod, amount: totalAmount },
+    });
+    return {
+      success: {
+        bookingId,
+        redirectUrl: paymentResult.redirectUrl,
+        checkout: paymentResult.checkout,
+      },
+    };
   } catch (err) {
     // Booking already exists at this point — surface the payment error
     // but still point at the booking so the customer can retry payment
@@ -71,13 +86,17 @@ export async function payForBookingAction(
   bookingId: string,
   method: CustomerPaymentMethod,
   amount: string,
-): Promise<{ error?: string; redirectUrl?: string }> {
+): Promise<{ error?: string; redirectUrl?: string; checkout?: RazorpayCheckoutConfig }> {
   try {
-    const result = await backendFetch<{ payment: Payment; redirectUrl?: string }>(
-      `/customer/bookings/${bookingId}/payments`,
-      { method: "POST", body: { method, amount } },
-    );
-    return { redirectUrl: result.redirectUrl };
+    const result = await backendFetch<{
+      payment: Payment;
+      redirectUrl?: string;
+      checkout?: RazorpayCheckoutConfig;
+    }>(`/customer/bookings/${bookingId}/payments`, {
+      method: "POST",
+      body: { method, amount },
+    });
+    return { redirectUrl: result.redirectUrl, checkout: result.checkout };
   } catch (err) {
     if (err instanceof BackendError) return { error: err.message };
     throw err;

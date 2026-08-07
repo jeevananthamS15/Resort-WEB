@@ -135,6 +135,16 @@ export interface Payment {
   createdAt: string;
 }
 
+/** Present only when the tenant's active gateway is Razorpay — the
+ * backend created a real Razorpay Order and expects the client to open
+ * Razorpay's Checkout.js modal with these, not redirect anywhere. */
+export interface RazorpayCheckoutConfig {
+  keyId: string;
+  orderId: string;
+  amountPaise: number;
+  currency: string;
+}
+
 // ---------------------------------------------------------------------------
 // Public tenant / branding info
 // ---------------------------------------------------------------------------

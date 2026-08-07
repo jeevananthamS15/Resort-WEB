@@ -5,7 +5,7 @@ import { getMyBookingAction } from "@/actions/booking.actions";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingActions } from "@/components/account/BookingActions";
-import type { BookingStatus, PublicRoom } from "@/types/backend";
+import type { BookingStatus, PublicRoom, TenantInfo } from "@/types/backend";
 
 const STATUS_VARIANT: Record<BookingStatus, "default" | "secondary" | "destructive"> = {
   RESERVED: "secondary",
@@ -21,7 +21,10 @@ export default async function BookingDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const booking = await getMyBookingAction(id);
+  const [booking, info] = await Promise.all([
+    getMyBookingAction(id),
+    publicFetch<TenantInfo>("/public/tenant-info"),
+  ]);
 
   const roomDetails = await Promise.all(
     booking.rooms.map((r) =>
@@ -75,7 +78,7 @@ export default async function BookingDetailPage({
         </CardContent>
       </Card>
 
-      <BookingActions booking={booking} />
+      <BookingActions booking={booking} resortName={info.tenant.name} />
     </div>
   );
 }

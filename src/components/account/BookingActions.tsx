@@ -8,6 +8,7 @@ import {
   getMyInvoiceAction,
   payForBookingAction,
 } from "@/actions/booking.actions";
+import { openRazorpayCheckout } from "@/lib/razorpay";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -34,7 +35,13 @@ const METHODS: { value: CustomerPaymentMethod; label: string }[] = [
   { value: "NET_BANKING", label: "Net banking" },
 ];
 
-export function BookingActions({ booking }: { booking: Booking }) {
+export function BookingActions({
+  booking,
+  resortName,
+}: {
+  booking: Booking;
+  resortName: string;
+}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [confirmCancel, setConfirmCancel] = useState(false);
@@ -62,10 +69,22 @@ export function BookingActions({ booking }: { booking: Booking }) {
       const result = await payForBookingAction(booking.id, method, booking.totalAmount);
       if (result.error) {
         toast.error(result.error);
-      } else {
-        toast.success("Payment submitted");
-        router.refresh();
+        return;
       }
+
+      if (result.checkout) {
+        const outcome = await openRazorpayCheckout(result.checkout, { resortName });
+        if (outcome === "dismissed") {
+          toast.error("Payment was not completed.");
+          return;
+        }
+        toast.success("Payment submitted — confirming your booking…");
+        router.refresh();
+        return;
+      }
+
+      toast.success("Payment submitted");
+      router.refresh();
     });
   }
 

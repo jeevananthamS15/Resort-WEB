@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createAndPayAction } from "@/actions/booking.actions";
+import { openRazorpayCheckout } from "@/lib/razorpay";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -27,12 +28,14 @@ export function CheckoutForm({
   checkOutDate,
   guestCount,
   total,
+  resortName,
 }: {
   roomId: string;
   checkInDate: string;
   checkOutDate: string;
   guestCount: number;
   total: number;
+  resortName: string;
 }) {
   const router = useRouter();
   const [method, setMethod] = useState<CustomerPaymentMethod>("CREDIT_CARD");
@@ -57,8 +60,26 @@ export function CheckoutForm({
         }
         return;
       }
+
+      const bookingId = result.success!.bookingId;
+
+      if (result.success!.checkout) {
+        const outcome = await openRazorpayCheckout(result.success!.checkout, { resortName });
+        if (outcome === "dismissed") {
+          toast.error("Payment was not completed — you can retry from your booking.");
+          router.push(`/account/bookings/${bookingId}`);
+          return;
+        }
+        // Razorpay's own handler fired, but the booking's payment status
+        // only flips once the webhook lands server-side — hence "submitted"
+        // rather than "confirmed" here.
+        toast.success("Payment submitted — confirming your booking…");
+        router.push(`/account/bookings/${bookingId}`);
+        return;
+      }
+
       toast.success("Booking confirmed!");
-      router.push(`/account/bookings/${result.success!.bookingId}`);
+      router.push(`/account/bookings/${bookingId}`);
     });
   }
 

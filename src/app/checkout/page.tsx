@@ -4,7 +4,7 @@ import { publicFetch } from "@/lib/backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { estimateTotal } from "@/lib/pricing";
-import type { PublicRoomDetail } from "@/types/backend";
+import type { PublicRoomDetail, TenantInfo } from "@/types/backend";
 
 export default async function CheckoutPage({
   searchParams,
@@ -29,7 +29,10 @@ export default async function CheckoutPage({
     );
   }
 
-  const { room } = await publicFetch<{ room: PublicRoomDetail }>(`/public/rooms/${roomId}`);
+  const [{ room }, info] = await Promise.all([
+    publicFetch<{ room: PublicRoomDetail }>(`/public/rooms/${roomId}`),
+    publicFetch<TenantInfo>("/public/tenant-info"),
+  ]);
   const guests = Number(guestCount ?? 1);
   const { nights, perNight, total } = estimateTotal(
     room.basePrice,
@@ -71,6 +74,7 @@ export default async function CheckoutPage({
         checkOutDate={checkOutDate}
         guestCount={guests}
         total={total}
+        resortName={info.tenant.name}
       />
     </div>
   );
