@@ -13,14 +13,28 @@ export default async function RoomDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [{ room }, { rooms }] = await Promise.all([
-    publicFetch<{ room: PublicRoomDetail }>(`/public/rooms/${id}`),
-    publicFetch<{ rooms: PublicRoom[] } | { enabled: false }>("/public/rooms").then(
-      (r) => ("rooms" in r ? r : { rooms: [] as PublicRoom[] }),
-    ),
-  ]);
+  let room: PublicRoomDetail;
+  let similarRooms: PublicRoom[] = [];
+  try {
+    const [{ room: roomData }, roomsData] = await Promise.all([
+      publicFetch<{ room: PublicRoomDetail }>(`/public/rooms/${id}`),
+      publicFetch<{ rooms: PublicRoom[] } | { enabled: false }>("/public/rooms").then(
+        (r) => ("rooms" in r ? r : { rooms: [] as PublicRoom[] }),
+      ).catch(() => ({ rooms: [] as PublicRoom[] })),
+    ]);
+    room = roomData;
+    similarRooms = roomsData.rooms.filter((r) => r.id !== room.id).slice(0, 3);
+  } catch {
+    return (
+      <div className="mx-auto max-w-lg px-6 py-16 text-center">
+        <p className="text-muted-foreground mb-4">Unable to load room details. Please try again.</p>
+        <Link href="/rooms" className="text-primary hover:underline">
+          Back to rooms
+        </Link>
+      </div>
+    );
+  }
 
-  const similarRooms = rooms.filter((r) => r.id !== room.id).slice(0, 3);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">

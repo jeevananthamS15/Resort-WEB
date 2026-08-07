@@ -15,7 +15,10 @@ export default async function RoomsPage({
     ? `/public/rooms/availability?checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&guestCount=${guestCount ?? 1}`
     : "/public/rooms";
 
-  const result = await publicFetch<{ rooms: PublicRoom[] } | { enabled: false }>(path);
+  const result = await publicFetch<{ rooms: PublicRoom[] } | { enabled: false }>(path).catch(
+    () => ({ rooms: [] as PublicRoom[] }),
+  );
+
   const rooms = "rooms" in result ? result.rooms : [];
   const enabled = "rooms" in result;
 

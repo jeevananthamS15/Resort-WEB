@@ -8,7 +8,12 @@ export default async function AccountLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const info = await publicFetch<TenantInfo>("/public/tenant-info");
+  const info = await publicFetch<TenantInfo>("/public/tenant-info").catch(() => ({
+    tenant: { name: "Grand Hill Resort & Spa", currency: "INR", timezone: "Asia/Kolkata" },
+    general: { checkInTime: "14:00", checkOutTime: "11:00", address: "Mountain Ridge Estate" },
+    branding: {},
+    policies: { cancellationWindowHours: 48, cancellationPolicy: "Flexible 48h cancellation" },
+  }));
 
   return (
     <div className="flex min-h-screen flex-col">

@@ -29,10 +29,31 @@ export default async function CheckoutPage({
     );
   }
 
-  const [{ room }, info] = await Promise.all([
-    publicFetch<{ room: PublicRoomDetail }>(`/public/rooms/${roomId}`),
-    publicFetch<TenantInfo>("/public/tenant-info"),
-  ]);
+  let room: PublicRoomDetail;
+  let resortName = "Grand Hill Resort & Spa";
+  try {
+    const [roomData, info] = await Promise.all([
+      publicFetch<{ room: PublicRoomDetail }>(`/public/rooms/${roomId}`),
+      publicFetch<TenantInfo>("/public/tenant-info").catch(() => ({
+        tenant: { name: "Grand Hill Resort & Spa", currency: "INR", timezone: "Asia/Kolkata" },
+        general: { checkInTime: "14:00", checkOutTime: "11:00", address: "Mountain Ridge Estate" },
+        branding: {},
+        policies: { cancellationWindowHours: 48, cancellationPolicy: "Flexible 48h cancellation" },
+      })),
+    ]);
+    room = roomData.room;
+    resortName = info.tenant.name;
+  } catch {
+    return (
+      <div className="mx-auto max-w-lg px-6 py-16 text-center">
+        <p className="text-muted-foreground mb-4">Unable to load room details. Please try again.</p>
+        <Link href="/rooms" className="text-primary hover:underline">
+          Browse rooms
+        </Link>
+      </div>
+    );
+  }
+
   const guests = Number(guestCount ?? 1);
   const { nights, perNight, total } = estimateTotal(
     room.basePrice,
@@ -74,7 +95,7 @@ export default async function CheckoutPage({
         checkOutDate={checkOutDate}
         guestCount={guests}
         total={total}
-        resortName={info.tenant.name}
+        resortName={resortName}
       />
     </div>
   );
